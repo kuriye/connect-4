@@ -26,7 +26,7 @@ public class Connect_4_Client extends Application implements Connect4Constants {
     private char otherToken = ' ';
 
     // Create and initialize cells
-    private Cell[][] cell = new Cell[3][3];
+    private Cell[][] cell = new Cell[6][7];
 
     // Create and initialize a title label
     private Label lblTitle = new Label();

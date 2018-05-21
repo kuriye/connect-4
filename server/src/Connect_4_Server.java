@@ -20,7 +20,7 @@ public class Connect_4_Server extends Application implements Connect4Constants {
 
         // Create a scene and place it in the stage
         Scene scene = new Scene(new ScrollPane(taLog), 450, 200);
-        primaryStage.setTitle("TicTacToeServer"); // Set the stage title
+        primaryStage.setTitle("Connect4Server"); // Set the stage title
         primaryStage.setScene(scene); // Place the scene in the stage
         primaryStage.show(); // Display the stage
 

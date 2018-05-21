@@ -8,7 +8,7 @@ public class HandleASession implements Runnable, Connect4Constants {
         private Socket player2;
 
         // Create and initialize cells
-        private char[][] cell =  new char[3][3];
+        private char[][] cell =  new char[6][7];
 
         private DataInputStream fromPlayer1;
         private DataOutputStream toPlayer1;
@@ -24,8 +24,8 @@ public class HandleASession implements Runnable, Connect4Constants {
             this.player2 = player2;
 
             // Initialize cells
-            for (int i = 0; i < 3; i++)
-                for (int j = 0; j < 3; j++)
+            for (int i = 0; i < 6; i++)
+                for (int j = 0; j < 7; j++)
                     cell[i][j] = ' ';
         }
 
@@ -33,13 +33,13 @@ public class HandleASession implements Runnable, Connect4Constants {
         public void run() {
             try {
                 // Create data input and output streams
-                DataInputStream fromPlayer1 = new DataInputStream(
+                 fromPlayer1 = new DataInputStream(
                         player1.getInputStream());
-                DataOutputStream toPlayer1 = new DataOutputStream(
+                 toPlayer1 = new DataOutputStream(
                         player1.getOutputStream());
-                DataInputStream fromPlayer2 = new DataInputStream(
+                 fromPlayer2 = new DataInputStream(
                         player2.getInputStream());
-                DataOutputStream toPlayer2 = new DataOutputStream(
+                 toPlayer2 = new DataOutputStream(
                         player2.getOutputStream());
 
                 // Write anything to notify player 1 to start
