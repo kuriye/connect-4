@@ -1,0 +1,32 @@
+# Compiled class file
+*.class
+
+# Log file
+*.log
+
+# User-specific stuff:
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/dictionaries
+*.jpg
+
+# Sensitive or high-churn files:
+.idea/**/uiDesigner.xml
+
+# IntelliJ
+out/
+
+# Package Files #
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# JavaDoc
+doc/
+\.DS_Store
+
+
+
+\.idea/misc\.xml
