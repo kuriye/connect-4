@@ -1,9 +1,12 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.geom.Point2D;
 import java.io.*;
 import java.net.Socket;
 
-public class Connect_4_Client extends JFrame implements Connect4Constants {
+public class Connect_4_Client extends JFrame implements Connect4Constants, MouseListener {
     // Indicate whether the player has the turn
     private boolean myTurn = false;
 
@@ -34,6 +37,7 @@ public class Connect_4_Client extends JFrame implements Connect4Constants {
     private Socket socket;
     private int connectedTries;
     private JPanel content;
+    private GridPanel panel;
     
     public static void main(String[] args){
         Connect_4_Client client = new Connect_4_Client();
@@ -42,7 +46,7 @@ public class Connect_4_Client extends JFrame implements Connect4Constants {
     public Connect_4_Client() {
         this.content = new JPanel(new BorderLayout());
 
-        GridPanel panel = new GridPanel(7,6);
+         panel = new GridPanel(7,6);
 
         this.content.add(panel, BorderLayout.CENTER);
 
@@ -132,6 +136,7 @@ public class Connect_4_Client extends JFrame implements Connect4Constants {
                         waitForPlayerAction(); // Wait for player 2 to move
                         sendMove(); // Send player 2's move to the server
                     }
+                    repaint();
                 }
                 repaint();
 
@@ -204,6 +209,31 @@ public class Connect_4_Client extends JFrame implements Connect4Constants {
         // Get the other player's move
         int row = fromServer.readInt();
         int column = fromServer.readInt();
+
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
 
     }
 }
