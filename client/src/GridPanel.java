@@ -14,9 +14,6 @@ public class GridPanel extends JPanel implements MouseListener {
     public GridPanel(int rows, int cols){
         this.rows = rows;
         this.cols = cols;
-
-
-
     }
 
     public void paintComponent(Graphics g){
@@ -28,6 +25,8 @@ public class GridPanel extends JPanel implements MouseListener {
         //background
         g2d.setColor(new Color(255,255,255));
         g2d.fill(scherm);
+
+       // g2d.drawString("Your Turn");
 
         g2d.setColor(new Color(0, 102, 255));
         g2d.fillRoundRect(getWidth()/12*2, getHeight()/14, getWidth()/12*8, (int) (getHeight()/8*6.5), 15, 15);

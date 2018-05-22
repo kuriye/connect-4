@@ -1,9 +1,9 @@
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import javax.swing.*;
+import java.awt.*;
+import java.io.*;
 import java.net.Socket;
 
-public class Connect_4_Client implements Connect4Constants {
+public class Connect_4_Client extends JFrame implements Connect4Constants {
     // Indicate whether the player has the turn
     private boolean myTurn = false;
 
@@ -18,8 +18,8 @@ public class Connect_4_Client implements Connect4Constants {
     private int columnSelected;
 
     // Input and output streams from/to server
-    private DataInputStream fromServer;
-    private DataOutputStream toServer;
+    private ObjectInputStream fromServer;
+    private ObjectOutputStream toServer;
 
     // Continue to play?
     private boolean continueToPlay = true;
@@ -33,14 +33,25 @@ public class Connect_4_Client implements Connect4Constants {
     private static final int MAX_CONNECT_TRIES = 50;
     private Socket socket;
     private int connectedTries;
+    private JPanel content;
     
     public static void main(String[] args){
         Connect_4_Client client = new Connect_4_Client();
     }
 
     public Connect_4_Client() {
-        // Pane to hold cell
-        GUI panel = new GUI();
+        this.content = new JPanel(new BorderLayout());
+
+        GridPanel panel = new GridPanel(7,6);
+
+        this.content.add(panel, BorderLayout.CENTER);
+
+
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.setLocationRelativeTo(null);
+        this.setContentPane(content);
+        this.setVisible(true);
 
         connectedTries = 0;
 
@@ -75,10 +86,10 @@ public class Connect_4_Client implements Connect4Constants {
 
         try {
             // Create an input stream to receive data from the server
-            fromServer = new DataInputStream(socket.getInputStream());
+            fromServer = new ObjectInputStream(socket.getInputStream());
 
             // Create an output stream to send data to the server
-            toServer = new DataOutputStream(socket.getOutputStream());
+            toServer = new ObjectOutputStream(socket.getOutputStream());
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -91,8 +102,8 @@ public class Connect_4_Client implements Connect4Constants {
 
                 // Am I player 1 or 2?
                 if (player == PLAYER1) {
-                    myToken = 'X';
-                    otherToken = 'O';
+                    myToken = 'R';
+                    otherToken = 'G';
 
 
                     // Receive startup notification from the server
@@ -104,8 +115,8 @@ public class Connect_4_Client implements Connect4Constants {
                     // It is my turn
                     myTurn = true;
                 } else if (player == PLAYER2) {
-                    myToken = 'O';
-                    otherToken = 'X';
+                    myToken = 'G';
+                    otherToken = 'R';
 
                 }
 
@@ -121,6 +132,8 @@ public class Connect_4_Client implements Connect4Constants {
                         sendMove(); // Send player 2's move to the server
                     }
                 }
+                repaint();
+
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -156,18 +169,18 @@ public class Connect_4_Client implements Connect4Constants {
         if (status == PLAYER1_WON) {
             // Player 1 won, stop playing
             continueToPlay = false;
-            if (myToken == 'X') {
+            if (myToken == 'R') {
 
-            } else if (myToken == 'O') {
+            } else if (myToken == 'G') {
 
                 receiveMove();
             }
         } else if (status == PLAYER2_WON) {
             // Player 2 won, stop playing
             continueToPlay = false;
-            if (myToken == 'O') {
+            if (myToken == 'G') {
 
-            } else if (myToken == 'X') {
+            } else if (myToken == 'R') {
 
                 receiveMove();
             }
@@ -176,7 +189,7 @@ public class Connect_4_Client implements Connect4Constants {
             continueToPlay = false;
 
 
-            if (myToken == 'O') {
+            if (myToken == 'G') {
                 receiveMove();
             }
         } else {
