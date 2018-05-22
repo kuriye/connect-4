@@ -141,7 +141,8 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
                 repaint();
 
             } catch (Exception ex) {
-                ex.printStackTrace();
+//                ex.printStackTrace();
+                System.out.println("Server closed.");
             }
         }).start();
     }
