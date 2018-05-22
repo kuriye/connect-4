@@ -8,11 +8,14 @@ public class GUI extends JFrame{
     public GUI() throws HeadlessException {
         this.content = new JPanel(new BorderLayout());
 
+        GridPanel panel = new GridPanel(6,7);
 
-        this.setSize(getWidth(), getHeight());
+        this.content.add(panel, BorderLayout.CENTER);
+
+
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
-        this.setResizable(false);
         this.setContentPane(content);
         this.setVisible(true);
     }

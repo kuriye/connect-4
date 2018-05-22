@@ -54,6 +54,7 @@ public class Connect_4_Client extends Application implements Connect4Constants {
     @Override // Override the start method in the Application class
     public void start(Stage primaryStage) {
         // Pane to hold cell
+        GUI panel = new GUI();
         GridPane pane = new GridPane();
         for (int i = 0; i < 3; i++)
             for (int j = 0; j < 3; j++)
