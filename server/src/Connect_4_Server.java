@@ -9,6 +9,7 @@ import javafx.stage.WindowEvent;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Date;
@@ -49,7 +50,7 @@ public class Connect_4_Server extends Application implements Connect4Constants {
                     });
 
                     // Notify that the player is Player 1
-                    new DataOutputStream(
+                    new ObjectOutputStream(
                             player1.getOutputStream()).writeInt(PLAYER1);
 
                     // Connect to player 2
@@ -63,7 +64,7 @@ public class Connect_4_Server extends Application implements Connect4Constants {
                     });
 
                     // Notify that the player is Player 2
-                    new DataOutputStream(
+                    new ObjectOutputStream(
                             player2.getOutputStream()).writeInt(PLAYER2);
 
                     // Display this session and increment session number

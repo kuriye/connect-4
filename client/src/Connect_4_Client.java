@@ -91,10 +91,13 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
 
         try {
             // Create an input stream to receive data from the server
-            fromServer = new ObjectInputStream(socket.getInputStream());
+            toServer = new ObjectOutputStream(socket.getOutputStream());
+            toServer.flush();
 
             // Create an output stream to send data to the server
-            toServer = new ObjectOutputStream(socket.getOutputStream());
+
+            fromServer = new ObjectInputStream(socket.getInputStream());
+
         }catch(Exception e){
             e.printStackTrace();
         }
