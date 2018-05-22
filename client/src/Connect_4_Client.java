@@ -123,7 +123,8 @@ public class Connect_4_Client implements Connect4Constants {
                     }
                 }
             } catch (Exception ex) {
-                ex.printStackTrace();
+//                ex.printStackTrace();
+                System.out.println("Server closed.");
             }
         }).start();
     }

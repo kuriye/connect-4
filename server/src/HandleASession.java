@@ -1,6 +1,8 @@
 import java.awt.geom.Point2D;
 import java.io.*;
 import java.net.Socket;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class HandleASession implements Runnable, Connect4Constants {
         private Socket player1;
@@ -26,6 +28,16 @@ public class HandleASession implements Runnable, Connect4Constants {
             for (int i = 0; i < 6; i++)
                 for (int j = 0; j < 7; j++)
                     cell[i][j] = ' ';
+
+            //sout
+            String result = Arrays
+                    .stream(cell)
+                    .map(Arrays::toString)
+                    .collect(Collectors.joining(System.lineSeparator()));
+            System.out.println(result);
+
+            System.out.println(isRowFull(0));
+
         }
 
         /** Implement the run() method for the thread */
@@ -93,9 +105,12 @@ public class HandleASession implements Runnable, Connect4Constants {
                         toPlayer1.writeObject(point);
                     }
                 }
-            }
-            catch(IOException | ClassNotFoundException ex) {
-                ex.printStackTrace();
+            }catch (IOException ioEx){
+//                ioEx.printStackTrace();
+                System.out.println("Player left.");
+
+            }catch (ClassNotFoundException classEx){
+                classEx.printStackTrace();
             }
         }
 
@@ -115,6 +130,10 @@ public class HandleASession implements Runnable, Connect4Constants {
 
             // All cells are filled
             return true;
+        }
+
+        private boolean isRowFull(int row){
+            return cell[5][row] != ' ';
         }
 
         /** Determine if the player with the specified token wins */
