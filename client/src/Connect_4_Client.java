@@ -15,9 +15,6 @@ public class Connect_4_Client implements Connect4Constants {
     // Indicate the token for the other player
     private char otherToken = ' ';
 
-    // Create and initialize cells
-    private Cell[][] cell = new Cell[6][7];
-
     // Indicate selected row and column by the current move
     private int rowSelected;
     private int columnSelected;
