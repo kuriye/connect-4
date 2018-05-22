@@ -32,6 +32,8 @@ public class Connect_4_Client implements Connect4Constants {
     // Host name or ip
     private String host = "localhost";
 
+    private Socket socket;
+    
     public static void main(String[] args){
         Connect_4_Client client = new Connect_4_Client();
     }
@@ -44,20 +46,30 @@ public class Connect_4_Client implements Connect4Constants {
         connectToServer();
     }
 
-    private void connectToServer() {
-        try {
+    private boolean createSocket(){
+        try{
             // Create a socket to connect to the server
-            Socket socket = new Socket(host, 8000);
+            socket = new Socket(host, 8000);
+        }catch(Exception e){
+            return createSocket();
+        }
+        return true;
+    }
 
+    private void connectToServer() {
+        createSocket();
+
+        System.out.println("connected");
+
+        try {
             // Create an input stream to receive data from the server
             fromServer = new DataInputStream(socket.getInputStream());
 
             // Create an output stream to send data to the server
             toServer = new DataOutputStream(socket.getOutputStream());
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        }catch(Exception e){
+            e.printStackTrace();
         }
-
 
         // Control the game on a separate thread
         new Thread(() -> {

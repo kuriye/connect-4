@@ -1,9 +1,11 @@
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -23,6 +25,14 @@ public class Connect_4_Server extends Application implements Connect4Constants {
         primaryStage.setTitle("Connect4Server"); // Set the stage title
         primaryStage.setScene(scene); // Place the scene in the stage
         primaryStage.show(); // Display the stage
+
+//        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+//            @Override
+//            public void handle(WindowEvent event) {
+//                Platform.exit();
+//                System.exit(0);
+//            }
+//        });
 
         new Thread( () -> {
             try {
