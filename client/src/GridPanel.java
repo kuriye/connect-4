@@ -14,6 +14,11 @@ public class GridPanel extends JPanel implements MouseListener {
         this.rows = rows;
         this.cols = cols;
 
+        for(int i = 0; i < rows; i++){
+            for(int j = 0; j < cols; j++){
+                coins.add(new CoinLocation(getWidth()/12*2 + 50 + 70*i, getHeight()/14+ 50 * 70 *j,50 ,50));
+            }
+        }
 
     }
 
@@ -21,7 +26,20 @@ public class GridPanel extends JPanel implements MouseListener {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
 
-        g2d.drawRoundRect(getWidth()/10, getHeight()/8, getWidth()/10*8, getHeight()/8*6, 15, 15);
+        g2d.setColor(new Color(0, 102, 255));
+        g2d.fillRoundRect(getWidth()/12*2, getHeight()/14, getWidth()/12*8, (int) (getHeight()/8*6.5), 15, 15);
+        g2d.setColor(Color.BLACK);
+        g2d.drawRoundRect(getWidth()/12*2, getHeight()/14, getWidth()/12*8, (int) (getHeight()/8*6.5), 15, 15);
+        g2d.setColor(new Color(0, 102, 255));
+        g2d.fillRoundRect(getWidth()/12*2, (int) (getHeight()/8*6.5), 50, getHeight()-(int) (getHeight()/8*6.5), 15, 15);
+        g2d.fillRoundRect(getWidth()/12*10 - 50, (int) (getHeight()/8*6.5), 50, getHeight()-(int) (getHeight()/8*6.5), 15, 15);
+        g2d.setColor(Color.BLACK);
+        g2d.drawRoundRect(getWidth()/12*2, (int) (getHeight()/8*6.5), 50, getHeight()-(int) (getHeight()/8*6.5), 15, 15);
+        g2d.drawRoundRect(getWidth()/12*10 -50, (int) (getHeight()/8*6.5), 50, getHeight()-(int) (getHeight()/8*6.5), 15, 15);
+
+        for(CoinLocation coin: coins){
+            coin.draw(g2d);
+        }
 
     }
 
