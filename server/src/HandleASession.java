@@ -1,6 +1,5 @@
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.awt.geom.Point2D;
+import java.io.*;
 import java.net.Socket;
 
 public class HandleASession implements Runnable, Connect4Constants {
@@ -10,10 +9,10 @@ public class HandleASession implements Runnable, Connect4Constants {
         // Create and initialize cells
         private char[][] cell =  new char[6][7];
 
-        private DataInputStream fromPlayer1;
-        private DataOutputStream toPlayer1;
-        private DataInputStream fromPlayer2;
-        private DataOutputStream toPlayer2;
+        private ObjectInputStream fromPlayer1;
+        private ObjectOutputStream toPlayer1;
+        private ObjectInputStream fromPlayer2;
+        private ObjectOutputStream toPlayer2;
 
         // Continue to play
         private boolean continueToPlay = true;
@@ -33,13 +32,13 @@ public class HandleASession implements Runnable, Connect4Constants {
         public void run() {
             try {
                 // Create data input and output streams
-                 fromPlayer1 = new DataInputStream(
+                 fromPlayer1 = new ObjectInputStream(
                         player1.getInputStream());
-                 toPlayer1 = new DataOutputStream(
+                 toPlayer1 = new ObjectOutputStream(
                         player1.getOutputStream());
-                 fromPlayer2 = new DataInputStream(
+                 fromPlayer2 = new ObjectInputStream(
                         player2.getInputStream());
-                 toPlayer2 = new DataOutputStream(
+                 toPlayer2 = new ObjectOutputStream(
                         player2.getOutputStream());
 
                 // Write anything to notify player 1 to start
@@ -50,21 +49,20 @@ public class HandleASession implements Runnable, Connect4Constants {
                 // the game status to the players
                 while (true) {
                     // Receive a move from player 1
-                    int row = fromPlayer1.readInt();
-                    int column = fromPlayer1.readInt();
-                    cell[row][column] = 'X';
+                    Point2D point = (Point2D) fromPlayer1.readObject();
+                    cell[(int)point.getX()][(int)point.getY()] = 'R';
 
                     // Check if Player 1 wins
-                    if (isWon('X')) {
+                    if (isWon('R')) {
                         toPlayer1.writeInt(PLAYER1_WON);
                         toPlayer2.writeInt(PLAYER1_WON);
-                        sendMove(toPlayer2, row, column);
+                        toPlayer2.writeObject(point);
                         break; // Break the loop
                     }
                     else if (isFull()) { // Check if all cells are filled
                         toPlayer1.writeInt(DRAW);
                         toPlayer2.writeInt(DRAW);
-                        sendMove(toPlayer2, row, column);
+                        toPlayer2.writeObject(point);
                         break;
                     }
                     else {
@@ -72,19 +70,19 @@ public class HandleASession implements Runnable, Connect4Constants {
                         toPlayer2.writeInt(CONTINUE);
 
                         // Send player 1's selected row and column to player 2
-                        sendMove(toPlayer2, row, column);
+                        toPlayer2.writeObject(point);
                     }
 
                     // Receive a move from Player 2
-                    row = fromPlayer2.readInt();
-                    column = fromPlayer2.readInt();
-                    cell[row][column] = 'O';
+                    point = (Point2D) fromPlayer2.readObject();
+                    
+                    cell[(int) point.getX()][(int)(point.getY())] = 'G';
 
                     // Check if Player 2 wins
-                    if (isWon('O')) {
+                    if (isWon('G')) {
                         toPlayer1.writeInt(PLAYER2_WON);
                         toPlayer2.writeInt(PLAYER2_WON);
-                        sendMove(toPlayer1, row, column);
+                        toPlayer1.writeObject(point);
                         break;
                     }
                     else {
@@ -92,26 +90,26 @@ public class HandleASession implements Runnable, Connect4Constants {
                         toPlayer1.writeInt(CONTINUE);
 
                         // Send player 2's selected row and column to player 1
-                        sendMove(toPlayer1, row, column);
+                        toPlayer1.writeObject(point);
                     }
                 }
             }
-            catch(IOException ex) {
+            catch(IOException | ClassNotFoundException ex) {
                 ex.printStackTrace();
             }
         }
 
         /** Send the move to other player */
-        private void sendMove(DataOutputStream out, int row, int column)
-                throws IOException {
-            out.writeInt(row); // Send row index
-            out.writeInt(column); // Send column index
-        }
+//        private void sendMove(OutputStream out, int row, int column)
+//                throws IOException {
+//            out.writeInt(row); // Send row index
+//            out.writeInt(column); // Send column index
+//        }
 
         /** Determine if the cells are all occupied */
         private boolean isFull() {
-            for (int i = 0; i < 3; i++)
-                for (int j = 0; j < 3; j++)
+            for (int i = 0; i < 7; i++)
+                for (int j = 0; j < 6; j++)
                     if (cell[i][j] == ' ')
                         return false; // At least one cell is not filled
 
