@@ -26,14 +26,6 @@ public class Connect_4_Server extends Application implements Connect4Constants {
         primaryStage.setScene(scene); // Place the scene in the stage
         primaryStage.show(); // Display the stage
 
-//        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-//            @Override
-//            public void handle(WindowEvent event) {
-//                Platform.exit();
-//                System.exit(0);
-//            }
-//        });
-
         new Thread( () -> {
             try {
                 // Create a server socket
