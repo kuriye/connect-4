@@ -87,7 +87,7 @@ public class HandleASession implements Runnable, Connect4Constants {
 
                     // Receive a move from Player 2
                     point = (Point2D) fromPlayer2.readObject();
-                    
+
                     cell[(int) point.getX()][(int)(point.getY())] = 'G';
 
                     // Check if Player 2 wins
