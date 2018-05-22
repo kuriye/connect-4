@@ -68,6 +68,7 @@ public class Connect_4_Client implements Connect4Constants {
     private void connectToServer() {
         if(!createSocket()){
             System.out.println("Couldn't connect to server.");
+//            System.exit(0);
             return;
         }else{
             System.out.println("Connected to server.");
