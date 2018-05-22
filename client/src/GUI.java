@@ -8,7 +8,7 @@ public class GUI extends JFrame{
     public GUI() throws HeadlessException {
         this.content = new JPanel(new BorderLayout());
 
-        GridPanel panel = new GridPanel(6,7);
+        GridPanel panel = new GridPanel(7,6);
 
         this.content.add(panel, BorderLayout.CENTER);
 

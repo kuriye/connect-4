@@ -7,7 +7,7 @@ public class CoinLocation {
 
     public CoinLocation(int x, int y, int width, int height){
         this.circle = new Ellipse2D.Double(x, y, width, height);
-        this.color = new Color(51, 51,51);
+        this.color = new Color(255, 255,255);
     }
 
     private void setColor(Color color){
