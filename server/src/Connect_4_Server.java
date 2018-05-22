@@ -1,9 +1,11 @@
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.io.DataOutputStream;
 import java.io.IOException;

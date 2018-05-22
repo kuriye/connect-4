@@ -1,5 +1,3 @@
-
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -32,6 +30,10 @@ public class Connect_4_Client implements Connect4Constants {
     // Host name or ip
     private String host = "localhost";
 
+    private static final int MAX_CONNECT_TRIES = 50;
+    private Socket socket;
+    private int connectedTries;
+    
     public static void main(String[] args){
         Connect_4_Client client = new Connect_4_Client();
     }
@@ -40,24 +42,46 @@ public class Connect_4_Client implements Connect4Constants {
         // Pane to hold cell
         GUI panel = new GUI();
 
+        connectedTries = 0;
+
         // Connect to the server
         connectToServer();
     }
 
-    private void connectToServer() {
-        try {
+    private boolean createSocket(){
+        try{
             // Create a socket to connect to the server
-            Socket socket = new Socket(host, 8000);
+            socket = new Socket(host, 8000);
+        }catch(Exception e){
+            connectedTries++;
 
+            System.out.println("Not connected, trying to reconnect... (try: " + connectedTries + ")");
+
+            if(connectedTries < MAX_CONNECT_TRIES)
+                return createSocket();
+            else
+                return false;
+        }
+        return true;
+    }
+
+    private void connectToServer() {
+        if(!createSocket()){
+            System.out.println("Couldn't connect to server.");
+            return;
+        }else{
+            System.out.println("Connected to server.");
+        }
+
+        try {
             // Create an input stream to receive data from the server
             fromServer = new DataInputStream(socket.getInputStream());
 
             // Create an output stream to send data to the server
             toServer = new DataOutputStream(socket.getOutputStream());
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        }catch(Exception e){
+            e.printStackTrace();
         }
-
 
         // Control the game on a separate thread
         new Thread(() -> {
