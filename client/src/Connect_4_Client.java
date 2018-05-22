@@ -79,6 +79,7 @@ public class Connect_4_Client extends JFrame implements Connect4Constants {
     private void connectToServer() {
         if(!createSocket()){
             System.out.println("Couldn't connect to server.");
+//            System.exit(0);
             return;
         }else{
             System.out.println("Connected to server.");
