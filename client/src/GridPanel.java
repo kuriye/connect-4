@@ -57,7 +57,7 @@ public class GridPanel extends JPanel  {
         }
     }
 
-    public ArrayList getButtons(){
+    public ArrayList<Point2D> getButtons(){
         return buttons;
     }
 

@@ -61,6 +61,7 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
 
         // Connect to the server
         connectToServer();
+        this.addMouseListener(this);
     }
 
     private boolean createSocket(){
@@ -210,15 +211,17 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
     }
 
     private void receiveMove() throws IOException {
-        // Get the other player's move
-        int row = fromServer.readInt();
         int column = fromServer.readInt();
 
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        
+        Point2D point2D = new Point2D.Double(e.getX(),e.getY());
+        for(Object point: panel.getButtons()){
+            System.out.println(point);
+            System.out.println(point2D);
+        }
     }
 
     @Override

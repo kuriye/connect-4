@@ -4,6 +4,8 @@ import java.net.Socket;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+
+
 public class HandleASession implements Runnable, Connect4Constants {
         private Socket player1;
         private Socket player2;
@@ -62,6 +64,7 @@ public class HandleASession implements Runnable, Connect4Constants {
                 while (true) {
                     // Receive a move from player 1
                     Point2D point = (Point2D) fromPlayer1.readObject();
+                    if(cell[(int) point.getX()][(int)(point.getY())] == ' ')
                     cell[(int)point.getX()][(int)point.getY()] = 'R';
 
                     // Check if Player 1 wins
@@ -87,8 +90,10 @@ public class HandleASession implements Runnable, Connect4Constants {
 
                     // Receive a move from Player 2
                     point = (Point2D) fromPlayer2.readObject();
-
-                    cell[(int) point.getX()][(int)(point.getY())] = 'G';
+                    if(cell[(int) point.getX()][(int)(point.getY())] == ' ')
+                        cell[(int) point.getX()][(int)(point.getY())] = 'G';
+                    else
+                        toPlayer2.writeInt(IVALID_MOVE);
 
                     // Check if Player 2 wins
                     if (isWon('G')) {
@@ -115,7 +120,7 @@ public class HandleASession implements Runnable, Connect4Constants {
         }
 
         /** Send the move to other player */
-//        private void sendMove(OutputStream out, int row, int column)
+//        private void sendMove(ObjectOutputStream out, int row, int column)
 //                throws IOException {
 //            out.writeInt(row); // Send row index
 //            out.writeInt(column); // Send column index
