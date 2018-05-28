@@ -46,13 +46,13 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
     public Connect_4_Client() {
         this.content = new JPanel(new BorderLayout());
 
-         panel = new GridPanel(7,6);
+        panel = new GridPanel(7,6);
 
         this.content.add(panel, BorderLayout.CENTER);
 
 
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
         this.setContentPane(content);
         this.setVisible(true);
@@ -96,7 +96,6 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
             toServer.flush();
 
             // Create an output stream to send data to the server
-
             fromServer = new ObjectInputStream(socket.getInputStream());
 
         }catch(Exception e){
@@ -151,9 +150,6 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
         }).start();
     }
 
-    /**
-     * Wait for the player to mark a cell
-     */
     private void waitForPlayerAction() throws InterruptedException {
         while (waiting) {
             Thread.sleep(100);
@@ -162,18 +158,14 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
         waiting = true;
     }
 
-    /**
-     * Send this player's move to the server
-     */
     private void sendMove() throws IOException {
-        toServer.writeInt(rowSelected); // Send the selected row
-        toServer.writeInt(columnSelected); // Send the selected column
+        int x = rowSelected;
+        int y = columnSelected;
+
+        toServer.writeObject(new Point2D.Double(x,y));
     }
 
-    /**
-     * Receive info from the server
-     */
-    private void receiveInfoFromServer() throws IOException {
+    private void receiveInfoFromServer() throws IOException, ClassNotFoundException {
         // Receive game status
         int status = fromServer.readInt();
 
@@ -210,8 +202,23 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
         }
     }
 
-    private void receiveMove() throws IOException {
-        int column = fromServer.readInt();
+    private void receiveMove() throws IOException, ClassNotFoundException {
+        // Get the other player's move
+        Point2D point = (Point2D) fromServer.readObject();
+        int row = (int) point.getX();
+        int column = (int) point.getY();
+
+        for(CoinLocation coin : panel.getCoins()){
+            if(coin.getRow() == row && coin.getColumn() == column){
+                if(myToken == 'G')
+                    coin.setColor(Color.green);
+                else
+                    coin.setColor(Color.red);
+
+                coin.draw();
+                return;
+            }
+        }
 
     }
 

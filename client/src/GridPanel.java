@@ -7,6 +7,7 @@ import java.util.ArrayList;
 public class GridPanel extends JPanel  {
     private int rows;
     private int cols;
+    private Graphics2D g;
 
     private ArrayList<CoinLocation> coins = new ArrayList<>();
     private ArrayList<Point2D> buttons = new ArrayList<>();
@@ -19,6 +20,7 @@ public class GridPanel extends JPanel  {
     public void paintComponent(Graphics g){
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
+        this.g = g2d;
 
         Rectangle2D.Double scherm = new Rectangle2D.Double(0,0,getWidth(), getHeight());
 
@@ -53,7 +55,7 @@ public class GridPanel extends JPanel  {
         }
 
         for(CoinLocation coin: coins){
-            coin.draw(g2d);
+            coin.draw();
         }
     }
 
@@ -61,10 +63,14 @@ public class GridPanel extends JPanel  {
         return buttons;
     }
 
+    public ArrayList<CoinLocation> getCoins(){
+        return coins;
+    }
+
     private void makeCoins(){
         for(int i = 0; i < rows; i++){
             for(int j = 0; j < cols; j++){
-                coins.add(new CoinLocation(getWidth()/12*2 + 110 + 160*i, getHeight()/14 + 50 + 120 *j,100 ,100));
+                coins.add(new CoinLocation(getWidth()/12*2 + 110 + 160*i, getHeight()/14 + 50 + 120 *j,100 ,100, i, j, g));
             }
         }
     }
