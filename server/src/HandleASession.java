@@ -143,37 +143,53 @@ public class HandleASession implements Runnable, Connect4Constants {
 
         /** Determine if the player with the specified token wins */
         private boolean isWon(char token) {
+            // TEST BOARD VALUES
+            for (int x = 0; x < 5; x++) {
+                for (int y = 0; y < 6; y++) {
+                    System.out.print(cell[x][y]);
+                }
+                System.out.println();
+            }
+
+
             // Check all rows
-            for (int i = 0; i < 3; i++)
-                if ((cell[i][0] == token)
-                        && (cell[i][1] == token)
-                        && (cell[i][2] == token)) {
-                    return true;
+            for (int x = 0; x < 6; x++) {
+                for (int y = 0; y < 3; y++) {
+                    if (cell[x][y] == token && cell[x][y+1] == token && cell[x][y+2] == token && cell[x][y+3] == token) {
+                        return true;
+                    }
                 }
+            }
+            ///Vert
 
-            /** Check all columns */
-            for (int j = 0; j < 3; j++)
-                if ((cell[0][j] == token)
-                        && (cell[1][j] == token)
-                        && (cell[2][j] == token)) {
-                    return true;
+            for (int x = 0; x < 3; x++) {
+                for (int y = 0; y < 7; y++) {
+                    if (cell[x][y] == token && cell[x+1][y] == token && cell[x+2][y] == token && cell[x+3][y] == token) {
+                        return true;
+                    }
                 }
-
-            /** Check major diagonal */
-            if ((cell[0][0] == token)
-                    && (cell[1][1] == token)
-                    && (cell[2][2] == token)) {
-                return true;
             }
 
-            /** Check subdiagonal */
-            if ((cell[0][2] == token)
-                    && (cell[1][1] == token)
-                    && (cell[2][0] == token)) {
-                return true;
+            //Diagonal wins
+            //0 to 1
+            //0 to 3
+            for (int x = 0; x < 3; x++) {
+                for (int y = 0; y < 6; y++) {
+                    if (cell[x][y] == token && cell[x+1][y+1] == token && cell[x+2][y+2] == token && cell[x+3][y+3] == token) {
+                        return true;
+                    }
+                }
             }
 
-            /** All checked, but no winner */
+            //Other diagonal wins
+            for (int x = 0; x < 3; x++) {
+                for (int y = 3; y < 7; y++) {
+                    if (cell[x][y] == token && cell[x+1][y-1] == token && cell[x+2][y-2] == token && cell[x+3][y-3] == token) {
+                        return true;
+                    }
+                }
+            }
+
             return false;
         }
     }
