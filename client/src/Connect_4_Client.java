@@ -224,11 +224,7 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        Point2D point2D = new Point2D.Double(e.getX(),e.getY());
-        for(Object point: panel.getButtons()){
-            System.out.println(point);
-            System.out.println(point2D);
-        }
+
     }
 
     @Override
@@ -238,6 +234,21 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        int buttonIndicator = 1;
+        Point2D mousePoint = new Point2D.Double(e.getX(),e.getY());
+        for(Point2D buttonPoint: panel.getButtons()){
+            if(mousePoint.getX() > buttonPoint.getX() && mousePoint.getX() < buttonPoint.getX()+70 && mousePoint.getY() > buttonPoint.getY() && mousePoint.getY() < buttonPoint.getY()+ 90) {
+                System.out.println(buttonIndicator);
+                System.out.println("buttonpoint " + buttonPoint);
+            }
+            buttonIndicator++;
+            //System.out.println(buttonPoint);
+        }
+        System.out.println("mouse point: " + mousePoint);
+        //System.out.println(point2D);
+        if (myTurn) {
+            myTurn = false;
+        }
 
     }
 

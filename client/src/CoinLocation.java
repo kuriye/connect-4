@@ -44,6 +44,8 @@ public class CoinLocation {
     public void draw() {
         g.setColor(this.color);
         g.fillOval(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+        g.setColor(Color.black);
+        g.drawOval(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         g.setColor(Color.white);
     }
 
