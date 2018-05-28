@@ -55,6 +55,8 @@ public class HandleASession implements Runnable, Connect4Constants {
                  toPlayer2 = new ObjectOutputStream(
                         player2.getOutputStream());
 
+                 boolean isValid = false;
+
                 // Write anything to notify player 1 to start
                 // This is just to let player 1 know to start
                 toPlayer1.writeInt(1);
@@ -64,8 +66,14 @@ public class HandleASession implements Runnable, Connect4Constants {
                 while (true) {
                     // Receive a move from player 1
                     Point2D point = (Point2D) fromPlayer1.readObject();
-                    if(cell[(int) point.getX()][(int)(point.getY())] == ' ')
-                    cell[(int)point.getX()][(int)point.getY()] = 'R';
+                    if(cell[(int) point.getX()][(int)(point.getY())] == ' ') {
+                        cell[(int) point.getX()][(int) point.getY()] = 'R';
+                        isValid = true;
+                    }
+                    else {
+                        toPlayer1.writeInt(IVALID_MOVE);
+                        isValid = false;
+                    }
 
                     // Check if Player 1 wins
                     if (isWon('R')) {
@@ -82,18 +90,26 @@ public class HandleASession implements Runnable, Connect4Constants {
                     }
                     else {
                         // Notify player 2 to take the turn
-                        toPlayer2.writeInt(CONTINUE);
+                        if(isValid) {
+                            toPlayer2.writeInt(CONTINUE);
 
-                        // Send player 1's selected row and column to player 2
-                        toPlayer2.writeObject(point);
+                            // Send player 1's selected row and column to player 2
+                            toPlayer2.writeObject(point);
+                            isValid = false;
+                        }
                     }
 
                     // Receive a move from Player 2
                     point = (Point2D) fromPlayer2.readObject();
-                    if(cell[(int) point.getX()][(int)(point.getY())] == ' ')
-                        cell[(int) point.getX()][(int)(point.getY())] = 'G';
-                    else
+                    if(cell[(int) point.getX()][(int)(point.getY())] == ' ') {
+                        cell[(int) point.getX()][(int) (point.getY())] = 'G';
+                        isValid = true;
+                    }
+                    else {
                         toPlayer2.writeInt(IVALID_MOVE);
+                        isValid = false;
+                    }
+
 
                     // Check if Player 2 wins
                     if (isWon('G')) {
@@ -103,11 +119,13 @@ public class HandleASession implements Runnable, Connect4Constants {
                         break;
                     }
                     else {
-                        // Notify player 1 to take the turn
-                        toPlayer1.writeInt(CONTINUE);
+                        if(isValid) {
+                            // Notify player 1 to take the turn
+                            toPlayer1.writeInt(CONTINUE);
 
-                        // Send player 2's selected row and column to player 1
-                        toPlayer1.writeObject(point);
+                            // Send player 2's selected row and column to player 1
+                            toPlayer1.writeObject(point);
+                        }
                     }
                 }
             }catch (IOException ioEx){
