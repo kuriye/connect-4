@@ -59,7 +59,13 @@ public class HandleASession implements Runnable, Connect4Constants {
 
                 // Write anything to notify player 1 to start
                 // This is just to let player 1 know to start
-                toPlayer1.writeInt(1);
+                //toPlayer1.writeInt(1);
+                toPlayer1.writeInt(PLAYER1);
+                System.out.println("Send to player 1");
+                toPlayer1.flush();
+                toPlayer2.writeInt(PLAYER2);
+                toPlayer2.flush();
+                System.out.println("Send to player 2");
 
                 // Continuously serve the players and determine and report
                 // the game status to the players
@@ -148,9 +154,10 @@ public class HandleASession implements Runnable, Connect4Constants {
         private boolean isFull() {
             for (int i = 0; i < 7; i++)
                 for (int j = 0; j < 6; j++)
-                    if (cell[i][j] == ' ')
+                    if (cell[i][j] == ' ') {
+                        System.out.println("vol");
                         return false; // At least one cell is not filled
-
+                    }
             // All cells are filled
             return true;
         }
@@ -207,7 +214,6 @@ public class HandleASession implements Runnable, Connect4Constants {
                     }
                 }
             }
-
             return false;
         }
     }

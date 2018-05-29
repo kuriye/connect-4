@@ -86,7 +86,7 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
             System.out.println("Couldn't connect to server.");
 //            System.exit(0);
             return;
-        }else{
+        } else {
             System.out.println("Connected to server.");
         }
 
@@ -98,6 +98,8 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
             // Create an output stream to send data to the server
             fromServer = new ObjectInputStream(socket.getInputStream());
 
+            System.out.println("Code can be reached");
+
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -105,8 +107,10 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
         // Control the game on a separate thread
         new Thread(() -> {
             try {
+                System.out.println("okay");
                 // Get notification from the server
                 int player = fromServer.readInt();
+                System.out.println(player);
 
                 // Am I player 1 or 2?
                 if (player == PLAYER1) {
