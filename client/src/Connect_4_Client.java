@@ -151,6 +151,7 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
                     if (player == PLAYER1) {
                         waitForPlayerAction(); // Wait for player 1 to move
                         sendMove(); // Send the move to the server
+                        receiveMove();
                         receiveInfoFromServer(); // Receive info from the server
                     } else if (player == PLAYER2) {
                         receiveInfoFromServer(); // Receive info from the server
@@ -226,6 +227,7 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
         Point2D point = (Point2D) fromServer.readObject();
         int row = (int) point.getX();
         int column = (int) point.getY();
+        System.out.println("reachable");
 
         if(myTurn)
             myTurn = false;

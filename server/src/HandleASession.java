@@ -61,9 +61,7 @@ public class HandleASession implements Runnable, Connect4Constants {
 
                 System.out.println("run() in HandleASession");
 
-                // Write anything to notify player 1 to start
-                // This is just to let player 1 know to start
-                //toPlayer1.writeInt(1);
+
                 toPlayer1.writeInt(PLAYER1);
                 System.out.println("Send to player 1");
                 toPlayer1.flush();
@@ -110,7 +108,9 @@ public class HandleASession implements Runnable, Connect4Constants {
                             toPlayer2.writeInt(CONTINUE);
 
                             // Send player 1's selected row and column to player 2
+                            System.out.println("send move");
                             toPlayer2.writeObject(point);
+                            toPlayer1.writeObject(point);
                             isValid = false;
                         }
                     }
