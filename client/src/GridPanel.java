@@ -57,7 +57,7 @@ public class GridPanel extends JPanel  {
         }
         makeButtons = false;
 
-        for(CoinLocation coin: coins){
+        for(CoinLocation coin : coins){
             coin.draw();
         }
     }
