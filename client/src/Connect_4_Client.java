@@ -241,16 +241,7 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
         Point2D point = (Point2D) fromServer.readObject();
         int row = (int) point.getX();
         int column = (int) point.getY();
-
-        if(cells[row][column] == ' ' ){
-            if(myToken == 'R')
-                 cells[row][column]  = 'R';
-            else
-                cells[row][column]  = 'G';
-        }
-
-
-
+        
         for(CoinLocation coin : panel.getCoins()){
             if(coin.getRow() == row && coin.getColumn() == column){
                 if(myToken == 'R') {
