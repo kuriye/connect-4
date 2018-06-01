@@ -8,6 +8,7 @@ public class CoinLocation {
     private int row;
     private int column;
     private Graphics2D g;
+    private boolean isDrawnWithColor;
 
     public CoinLocation(int x, int y, int width, int height, int row, int column, Graphics2D g){
         this.circle = new Ellipse2D.Double(x, y, width, height);
@@ -15,6 +16,7 @@ public class CoinLocation {
         this.row = row;
         this.column = column;
         this.g = g;
+        this.isDrawnWithColor = false;
     }
 
     public void setColor(Color color){
@@ -55,5 +57,13 @@ public class CoinLocation {
 
     public int getColumn() {
         return column;
+    }
+
+    public boolean isDrawnWithColor() {
+        return isDrawnWithColor;
+    }
+
+    public void setDrawnWithColor(boolean drawnWithColor) {
+        isDrawnWithColor = drawnWithColor;
     }
 }
