@@ -32,7 +32,7 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
     // Wait for the player to mark a cell
     private boolean waiting = true;
 
-    private char[][] cells = new char[6][7];
+    private char[][] cells;
 
     // Host name or ip
     private String host = "localhost";
@@ -61,9 +61,12 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
         this.setContentPane(content);
         this.setVisible(true);
 
+        char space = ' ';
+        cells = new char[6][7];
+
         for (int i = 0; i < 6; i++)
             for (int j = 0; j < 7; j++)
-                cells[i][j] = 'b';
+                cells[i][j] = space;
 
         String result = Arrays
                 .stream(cells)
@@ -266,7 +269,7 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
                     //System.out.println("reachable");
                     columnSelected = buttonIndicator - 1;
                     for (int i = 5; i > 0; i--) {
-                        if (cells[i][columnSelected] == 'b') {
+                        if (cells[i][columnSelected] == ' ') {
                             rowSelected = i;
                             cells[i][columnSelected] = 'R';
                             System.out.println("row: " + rowSelected + "/ column:  " + columnSelected);
