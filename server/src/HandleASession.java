@@ -119,6 +119,11 @@ public class HandleASession implements Runnable, Connect4Constants {
                     point = (Point2D) fromPlayer2.readObject();
                     if(cell[(int) point.getX()][(int)(point.getY())] == ' ') {
                         cell[(int) point.getX()][(int) (point.getY())] = 'G';
+                        String result = Arrays
+                                .stream(cell)
+                                .map(Arrays::toString)
+                                .collect(Collectors.joining(System.lineSeparator()));
+                        System.out.println(result);
                         isValid = true;
                     }
                     else {

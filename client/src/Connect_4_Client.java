@@ -184,7 +184,7 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
         myTurn = false;
 
         toServer.writeObject(new Point2D.Double(x,y));
-        System.out.println("move send");
+        System.out.println("move send to server");
     }
 
     private void receiveInfoFromServer() throws IOException, ClassNotFoundException {
@@ -229,7 +229,15 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
         Point2D point = (Point2D) fromServer.readObject();
         int row = (int) point.getX();
         int column = (int) point.getY();
-        System.out.println("reachable");
+
+        if(cells[row][column] == ' ' ){
+            if(myToken == 'R')
+                 cells[row][column]  = 'R';
+            else
+                cells[row][column]  = 'G';
+        }
+
+
 
         for(CoinLocation coin : panel.getCoins()){
             if(coin.getRow() == row && coin.getColumn() == column){
