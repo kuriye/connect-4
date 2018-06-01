@@ -263,20 +263,20 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
                 Point2D buttonPoint = buttons.get(buttonIndex);
 
                 if (mousePoint.getX() > buttonPoint.getX() && mousePoint.getX() < buttonPoint.getX() + 70 && mousePoint.getY() > buttonPoint.getY() && mousePoint.getY() < buttonPoint.getY() + 90) {
-                        System.out.println("buttonIndex: " + buttonIndex);
-                        
-                        columnSelected = buttonIndex;
-                        for (int i = 5; i > 0; i--) {
-                            System.out.println("i: " + i);
-                            System.out.println("columnSelected: " + columnSelected);
-                            if (cells[i][columnSelected] == ' ') {
-                                rowSelected = i;
-                                cells[i][columnSelected] = 'R';
-                                System.out.println("row: " + rowSelected + "/ column:  " + columnSelected);
-                                waiting = false;
-                                break;
-                            }
+                    System.out.println("buttonIndex: " + buttonIndex);
+
+                    columnSelected = buttonIndex;
+                    for (int i = 5; i > 0; i--) {
+                        System.out.println("i: " + i);
+                        System.out.println("columnSelected: " + columnSelected);
+                        if (cells[i][columnSelected] == ' ') {
+                            rowSelected = i;
+                            cells[i][columnSelected] = 'R';
+                            System.out.println("row: " + rowSelected + "/ column:  " + columnSelected);
+                            waiting = false;
+                            break;
                         }
+                    }
                 }
             }
         }
