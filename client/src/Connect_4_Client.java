@@ -10,51 +10,32 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 public class Connect_4_Client extends JFrame implements Connect4Constants, MouseListener {
-    // Indicate whether the player has the turn
+
     private boolean myTurn = false;
-
-    // Indicate the token for the player
-    private char myToken = ' ';
-
-    // Indicate the token for the other player
-    private char otherToken = ' ';
-
-    // Indicate selected row and column by the current move
+    private char myToken;
+    private char otherToken;
     private int rowSelected;
     private int columnSelected;
-
-    // Input and output streams from/to server
     private ObjectInputStream fromServer;
     private ObjectOutputStream toServer;
-
-    // Continue to play?
     private boolean continueToPlay = true;
-
-    // Wait for the player to mark a cell
     private boolean waiting = true;
-
     private char[][] cells;
-
-    // Host name or ip
-    private String host = "localhost";
-
     private ArrayList<Point2D> buttons;
     private static final int MAX_CONNECT_TRIES = 50;
     private Socket socket;
     private int connectedTries;
-    private JPanel content;
     private GridPanel panel;
     private boolean clicked;
 
     public static void main(String[] args){
-        Connect_4_Client client = new Connect_4_Client();
+        new Connect_4_Client();
     }
 
     public Connect_4_Client() {
         //gui
-        this.content = new JPanel(new BorderLayout());
-        this.panel = new GridPanel(7,6);
-        this.content.add(panel, BorderLayout.CENTER);
+        JPanel content = new JPanel(new BorderLayout());
+        content.add(this.panel = new GridPanel(7,6), BorderLayout.CENTER);
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
@@ -62,19 +43,25 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
         this.setMinimumSize(new Dimension(500,500));
         this.setVisible(true);
 
-        //
+        //tokens
         char space = ' ';
+        this.myToken = space;
+        this.otherToken = space;
+
+        //cells
         cells = new char[6][7];
 
         for (int i = 0; i < 6; i++)
             for (int j = 0; j < 7; j++)
                 cells[i][j] = space;
 
+        //prints board
         printBoard();
 
-        clicked = false;
-        connectedTries = 0;
-        buttons = panel.getButtons();
+        //other initialisations
+        this.clicked = false;
+        this.connectedTries = 0;
+        this.buttons = panel.getButtons();
 
         // Connect to the server
         connectToServer();
@@ -84,6 +71,7 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
     private boolean createSocket(){
         try{
             // Create a socket to connect to the server
+            String host = "localhost";
             socket = new Socket(host, 8000);
         }catch(Exception e){
             connectedTries++;
@@ -131,6 +119,7 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
         new Thread(() -> {
             try {
                 System.out.println("In Thread in connectToServer()");
+                
                 // Get notification from the server
                 int player = fromServer.readInt();
                 System.out.println("Player: " + player);
@@ -139,10 +128,6 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
                 if (player == PLAYER1) {
                     myToken = 'R';
                     otherToken = 'G';
-                    // Receive startup notification from the server
-                    //fromServer.readInt(); // Whatever read is ignored
-                    // The other player has joined
-                    // It is my turn
                     setTitle("Player 1 (" + myToken + ")");
                     myTurn = true;
                 } else if (player == PLAYER2) {
@@ -157,7 +142,6 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
                     if (player == PLAYER1) {
                         waitForPlayerAction(); // Wait for player 1 to move
                         sendMove(); // Send the move to the server
-//                        receiveMove();
                         receiveInfoFromServer(); // Receive info from the server
                     } else if (player == PLAYER2) {
                         receiveInfoFromServer(); // Receive info from the server
@@ -206,37 +190,36 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
             // Player 1 won, stop playing
             continueToPlay = false;
             if (myToken == 'R') {
-
+                //TODO: notify player 1 won
             } else if (myToken == 'G') {
-
+                //TODO: notify player 2 won
                 receiveMove();
             }
         } else if (status == PLAYER2_WON) {
             // Player 2 won, stop playing
             continueToPlay = false;
             if (myToken == 'G') {
-
+                //TODO: notify player 2 won
             } else if (myToken == 'R') {
-
+                //TODO: notify player 1 won
                 receiveMove();
             }
         } else if (status == DRAW) {
             // No winner, game is over
             continueToPlay = false;
 
-
             if (myToken == 'G') {
                 receiveMove();
             }
+
+            //TODO: notify players draw
         } else {
             receiveMove();
-
-            myTurn = true; // It is my turn
+            myTurn = true;
         }
     }
 
     private void receiveMove() throws IOException, ClassNotFoundException {
-        // Get the other player's move
         Point2D point = (Point2D) fromServer.readObject();
         int row = (int) point.getX();
         int column = (int) point.getY();
