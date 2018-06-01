@@ -123,7 +123,6 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
             // Create an output stream to send data to the server
             fromServer = new ObjectInputStream(socket.getInputStream());
 
-
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -131,10 +130,10 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
         // Control the game on a separate thread
         new Thread(() -> {
             try {
-                System.out.println("okay");
+                System.out.println("In Thread in connectToServer()");
                 // Get notification from the server
                 int player = fromServer.readInt();
-                System.out.println(player);
+                System.out.println("Player: " + player);
 
                 // Am I player 1 or 2?
                 if (player == PLAYER1) {
@@ -158,7 +157,7 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
                     if (player == PLAYER1) {
                         waitForPlayerAction(); // Wait for player 1 to move
                         sendMove(); // Send the move to the server
-                        receiveMove();
+//                        receiveMove();
                         receiveInfoFromServer(); // Receive info from the server
                     } else if (player == PLAYER2) {
                         receiveInfoFromServer(); // Receive info from the server
@@ -195,7 +194,7 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
         myTurn = false;
 
         toServer.writeObject(new Point2D.Double(x,y));
-        System.out.println("move send to server");
+        System.out.println("Send move to server");
         printBoard();
     }
 
@@ -244,14 +243,16 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
         
         for(CoinLocation coin : panel.getCoins()){
             if(coin.getRow() == row && coin.getColumn() == column){
-                if(myToken == 'R') {
-                    coin.setColor(Color.green);
-                } else {
+
+                if(otherToken == 'R')
                     coin.setColor(Color.red);
-                }
+                else
+                    coin.setColor(Color.green);
+
+                coin.draw();
+                repaint();
 
                 cells[column][row] = otherToken;
-                coin.draw();
                 return;
             }
         }
@@ -275,24 +276,11 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
             for (int buttonIndex = 0; buttonIndex < buttons.size(); buttonIndex++) {
                 Point2D buttonPoint = buttons.get(buttonIndex);
 
-                if (mousePoint.getX() > buttonPoint.getX() && mousePoint.getX() < buttonPoint.getX() + 70 && mousePoint.getY() > buttonPoint.getY() && mousePoint.getY() < buttonPoint.getY() + 90) {
-                        System.out.println("buttonIndex: " + buttonIndex);
-
-                        buttonPreassed(buttonIndex);
-
-                        //rowSelected = buttonIndex;
-//                        for (int i = 5; i > 0; i--) {
-//                            System.out.println("i: " + i);
-//                            System.out.println("columnSelected: " + rowSelected);
-//                            if (cells[i][columnSelected] == ' ') {
-//                                rowSelected = i;
-//                                cells[i][columnSelected] = myToken;
-//                                System.out.println("row: " + rowSelected + "/ column:  " + columnSelected);
-//                                buttonPreassed(buttonIndex);
-//                                waiting = false;
-//                                break;
-//                            }
-//                        }
+                if (mousePoint.getX() > buttonPoint.getX() &&
+                        mousePoint.getX() < buttonPoint.getX() + 70 &&
+                        mousePoint.getY() > buttonPoint.getY() &&
+                        mousePoint.getY() < buttonPoint.getY() + 90){
+                    buttonPreassed(buttonIndex);
                 }
             }
         }
@@ -309,6 +297,8 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
     }
 
     private void buttonPreassed(int button){
+        System.out.println("buttonPressed");
+
         rowSelected = button;
 
         ArrayList<CoinLocation> selectedRow = new ArrayList<>();
@@ -322,15 +312,17 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
         for(int i = selectedRow.size() - 1; i > -1; i--){
             CoinLocation coin = selectedRow.get(i);
             if(!coin.isDrawnWithColor()){
-                System.out.println("setDrawnWithColor(true)");
                 columnSelected = i;
                 coin.setDrawnWithColor(true);
 
-                System.out.println("columnSelected: " + columnSelected);
-                System.out.println("rowSelected: " + rowSelected);
-
                 cells[columnSelected][rowSelected] = myToken;
-                coin.draw();
+
+                if(myToken == 'R')
+                    coin.setColor(Color.red);
+                else
+                    coin.setColor(Color.green);
+
+                repaint();
 
                 waiting = false;
                 break;

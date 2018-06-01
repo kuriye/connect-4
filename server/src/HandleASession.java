@@ -82,10 +82,12 @@ public class HandleASession implements Runnable, Connect4Constants {
                 while (true) {
                     // Receive a move from player 1
                     Point2D point = (Point2D) fromPlayer1.readObject();
+
+                    System.out.println("Reading point object from player 1");
+
                     if(cell[(int) point.getY()][(int)(point.getX())] == ' ') {
                         cell[(int) point.getY()][(int) point.getX()] = 'R';
                         isValid = true;
-                        System.out.println(point);
                     }
                     else {
                         toPlayer1.writeInt(INVALID_MOVE);
@@ -94,28 +96,28 @@ public class HandleASession implements Runnable, Connect4Constants {
 
                     // Check if Player 1 wins
                     if (isWon('R')) {
+                        System.out.println("PLAYER 1 WINS");
                         toPlayer1.writeInt(PLAYER1_WON);
                         toPlayer2.writeInt(PLAYER1_WON);
                         toPlayer2.writeObject(point);
                         break; // Break the loop
                     }
                     else if (isFull()) { // Check if all cells are filled
+                        System.out.println("NOBODY WINS, ITS A DRAW");
                         toPlayer1.writeInt(DRAW);
                         toPlayer2.writeInt(DRAW);
                         toPlayer2.writeObject(point);
                         break;
                     }
-                    else {
-                        // Notify player 2 to take the turn
-                        if(isValid) {
-                            toPlayer2.writeInt(CONTINUE);
+                    else if(isValid){
+//                      Notify player 2 to take the turn
+                        System.out.println("Notify player 2 to take the turn");
+                        toPlayer2.writeInt(CONTINUE);
 
-                            // Send player 1's selected row and column to player 2
-                            System.out.println("send move");
-                            toPlayer2.writeObject(point);
-                            toPlayer1.writeObject(point);
-                            isValid = false;
-                        }
+                        // Send player 1's selected row and column to player 2
+                        System.out.println("send move");
+                        toPlayer2.writeObject(point);
+                        isValid = false;
                     }
 
                     // Receive a move from Player 2
@@ -132,26 +134,22 @@ public class HandleASession implements Runnable, Connect4Constants {
 
                     // Check if Player 2 wins
                     if (isWon('G')) {
+                        System.out.println("PLAYER 2 WINS");
                         toPlayer1.writeInt(PLAYER2_WON);
                         toPlayer2.writeInt(PLAYER2_WON);
                         toPlayer1.writeObject(point);
                         break;
                     }
-                    else {
-                        if(isValid) {
-                            // Notify player 1 to take the turn
-                            toPlayer1.writeInt(CONTINUE);
+                    else if(isValid){
+                        System.out.println("Notify player 1 to take the turn");
+                        toPlayer1.writeInt(CONTINUE);
 
-                            // Send player 2's selected row and column to player 1
-                            toPlayer1.writeObject(point);
-                        }
+                        // Send player 2's selected row and column to player 1
+                        System.out.println("send move");
+                        toPlayer1.writeObject(point);
+                        isValid = false;
                     }
-
-                    String result = Arrays
-                            .stream(cell)
-                            .map(Arrays::toString)
-                            .collect(Collectors.joining(System.lineSeparator()));
-                    System.out.println(result);
+                    printBoard();
                 }
             }catch (IOException ioEx){
 //                ioEx.printStackTrace();
@@ -161,13 +159,6 @@ public class HandleASession implements Runnable, Connect4Constants {
                 classEx.printStackTrace();
             }
         }
-
-        /** Send the move to other player */
-//        private void sendMove(ObjectOutputStream out, int row, int column)
-//                throws IOException {
-//            out.writeInt(row); // Send row index
-//            out.writeInt(column); // Send column index
-//        }
 
         /** Determine if the cells are all occupied */
         private boolean isFull() {
