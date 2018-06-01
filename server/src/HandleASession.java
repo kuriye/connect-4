@@ -55,7 +55,7 @@ public class HandleASession implements Runnable, Connect4Constants {
                  toPlayer2 = new ObjectOutputStream(
                         player2.getOutputStream());
 
-                 boolean isValid = false;
+                 boolean isValid;
 
                 // Write anything to notify player 1 to start
                 // This is just to let player 1 know to start
@@ -75,6 +75,7 @@ public class HandleASession implements Runnable, Connect4Constants {
                     if(cell[(int) point.getX()][(int)(point.getY())] == ' ') {
                         cell[(int) point.getX()][(int) point.getY()] = 'R';
                         isValid = true;
+                        System.out.println(point);
                     }
                     else {
                         toPlayer1.writeInt(IVALID_MOVE);

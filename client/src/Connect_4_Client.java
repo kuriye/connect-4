@@ -5,6 +5,8 @@ import java.awt.event.MouseListener;
 import java.awt.geom.Point2D;
 import java.io.*;
 import java.net.Socket;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class Connect_4_Client extends JFrame implements Connect4Constants, MouseListener {
     // Indicate whether the player has the turn
@@ -29,6 +31,8 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
 
     // Wait for the player to mark a cell
     private boolean waiting = true;
+
+    private char[][] cells = new char[6][7];
 
     // Host name or ip
     private String host = "localhost";
@@ -56,6 +60,17 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
         this.setLocationRelativeTo(null);
         this.setContentPane(content);
         this.setVisible(true);
+
+        for (int i = 0; i < 6; i++)
+            for (int j = 0; j < 7; j++)
+                cells[i][j] = 'b';
+
+        String result = Arrays
+                .stream(cells)
+                .map(Arrays::toString)
+                .collect(Collectors.joining(System.lineSeparator()));
+        System.out.println(result);
+
 
         connectedTries = 0;
 
@@ -116,14 +131,9 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
                 if (player == PLAYER1) {
                     myToken = 'R';
                     otherToken = 'G';
-
-
                     // Receive startup notification from the server
-                    fromServer.readInt(); // Whatever read is ignored
-
+                    //fromServer.readInt(); // Whatever read is ignored
                     // The other player has joined
-
-
                     // It is my turn
                     myTurn = true;
                 } else if (player == PLAYER2) {
@@ -135,6 +145,7 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
                 // Continue to play
                 while (continueToPlay) {
                     if (player == PLAYER1) {
+                        System.out.println("player 1");
                         waitForPlayerAction(); // Wait for player 1 to move
                         sendMove(); // Send the move to the server
                         receiveInfoFromServer(); // Receive info from the server
@@ -167,6 +178,7 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
         int y = columnSelected;
 
         toServer.writeObject(new Point2D.Double(x,y));
+        System.out.println("move send");
     }
 
     private void receiveInfoFromServer() throws IOException, ClassNotFoundException {
@@ -212,6 +224,11 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
         int row = (int) point.getX();
         int column = (int) point.getY();
 
+        if(myTurn)
+            myTurn = false;
+        else
+            myTurn = true;
+
         for(CoinLocation coin : panel.getCoins()){
             if(coin.getRow() == row && coin.getColumn() == column){
                 if(myToken == 'G')
@@ -240,20 +257,33 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
     public void mouseReleased(MouseEvent e) {
         int buttonIndicator = 1;
         Point2D mousePoint = new Point2D.Double(e.getX(),e.getY());
-        for(Point2D buttonPoint: panel.getButtons()){
-            if(mousePoint.getX() > buttonPoint.getX() && mousePoint.getX() < buttonPoint.getX()+70 && mousePoint.getY() > buttonPoint.getY() && mousePoint.getY() < buttonPoint.getY()+ 90) {
-                System.out.println(buttonIndicator);
-                System.out.println("buttonpoint " + buttonPoint);
-            }
-            buttonIndicator++;
-            //System.out.println(buttonPoint);
-        }
-        System.out.println("mouse point: " + mousePoint);
-        //System.out.println(point2D);
-        if (myTurn) {
-            myTurn = false;
-        }
+        for(Point2D buttonPoint: panel.getButtons()) {
+            if (mousePoint.getX() > buttonPoint.getX() && mousePoint.getX() < buttonPoint.getX() + 70 && mousePoint.getY() > buttonPoint.getY() && mousePoint.getY() < buttonPoint.getY() + 90) {
+//                System.out.println(buttonIndicator);
+//                System.out.println("buttonpoint " + buttonPoint);
+                //System.out.println(myTurn);
+                if (myTurn) {
+                    //System.out.println("reachable");
+                    columnSelected = buttonIndicator - 1;
+                    for (int i = 5; i > 0; i--) {
+                        if (cells[i][columnSelected] == 'b') {
+                            rowSelected = i;
+                            cells[i][columnSelected] = 'R';
+                            System.out.println("row: " + rowSelected + "/ column:  " + columnSelected);
+                            waiting = false;
+                            break;
+                        }
 
+                    }
+                    //myTurn = false;
+                   // System.out.println("mouse point: " + mousePoint);
+                }
+            }
+                buttonIndicator++;
+                //System.out.println(buttonPoint);
+        }
+            //System.out.println("mouse point: " + mousePoint);
+            //System.out.println(point2D);
     }
 
     @Override
