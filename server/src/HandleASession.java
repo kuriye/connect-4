@@ -1,3 +1,5 @@
+import javafx.application.Platform;
+
 import java.awt.geom.Point2D;
 import java.io.*;
 import java.net.Socket;
@@ -38,7 +40,7 @@ public class HandleASession implements Runnable, Connect4Constants {
                     .collect(Collectors.joining(System.lineSeparator()));
             System.out.println(result);
 
-            System.out.println(isRowFull(0));
+//            System.out.println(isRowFull(0)); wordt ook gecontroleerd in client -> als hij vol zit dan wordt hij niet gestuurd naar de server
 
         }
 
@@ -56,6 +58,8 @@ public class HandleASession implements Runnable, Connect4Constants {
                         player2.getOutputStream());
 
                  boolean isValid;
+
+                System.out.println("run() in HandleASession");
 
                 // Write anything to notify player 1 to start
                 // This is just to let player 1 know to start
@@ -78,7 +82,7 @@ public class HandleASession implements Runnable, Connect4Constants {
                         System.out.println(point);
                     }
                     else {
-                        toPlayer1.writeInt(IVALID_MOVE);
+                        toPlayer1.writeInt(INVALID_MOVE);
                         isValid = false;
                     }
 
@@ -113,7 +117,7 @@ public class HandleASession implements Runnable, Connect4Constants {
                         isValid = true;
                     }
                     else {
-                        toPlayer2.writeInt(IVALID_MOVE);
+                        toPlayer2.writeInt(INVALID_MOVE);
                         isValid = false;
                     }
 

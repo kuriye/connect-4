@@ -5,6 +5,7 @@ import java.awt.event.MouseListener;
 import java.awt.geom.Point2D;
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -42,7 +43,8 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
     private int connectedTries;
     private JPanel content;
     private GridPanel panel;
-    
+    private boolean clicked;
+
     public static void main(String[] args){
         Connect_4_Client client = new Connect_4_Client();
     }
@@ -74,7 +76,7 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
                 .collect(Collectors.joining(System.lineSeparator()));
         System.out.println(result);
 
-
+        clicked = false;
         connectedTries = 0;
 
         // Connect to the server
@@ -162,8 +164,8 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
                 repaint();
 
             } catch (Exception ex) {
-//                ex.printStackTrace();
-                System.out.println("Server closed.");
+                ex.printStackTrace();
+//                System.out.println("Server closed.");
             }
         }).start();
     }
@@ -244,6 +246,10 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
             }
         }
 
+        if (myTurn) {
+            myTurn = false;
+        }
+
     }
 
     @Override
@@ -253,7 +259,7 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
 
     @Override
     public void mousePressed(MouseEvent e) {
-
+        clicked = false;
     }
 
     @Override
@@ -297,6 +303,34 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
     @Override
     public void mouseExited(MouseEvent e) {
 
+    }
+
+    private void buttonPressed(int button){
+        rowSelected = button-1;
+
+        ArrayList<CoinLocation> selectedRow = new ArrayList<>();
+
+        for(CoinLocation coin : panel.getCoins()) {
+            if(coin.getRow() == rowSelected){
+                selectedRow.add(coin);
+            }
+        }
+
+        for(int i = selectedRow.size()-1; i > -1; i--){
+            CoinLocation coin = selectedRow.get(i);
+            if(!coin.isDrawnWithColor()){
+                System.out.println("setDrawnWithColor(true)");
+                columnSelected = i;
+                coin.setDrawnWithColor(true);
+                break;
+            }
+        }
+
+        try {
+            sendMove();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
 

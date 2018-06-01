@@ -5,5 +5,5 @@ public interface Connect4Constants {
     int PLAYER2_WON = 2;
     int DRAW = 3;
     int CONTINUE = 4;
-    int IVALID_MOVE = 5;
+    int INVALID_MOVE = 5;
 }
