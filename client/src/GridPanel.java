@@ -8,14 +8,16 @@ public class GridPanel extends JPanel  {
     private int rows;
     private int cols;
     private Graphics2D g;
-    private boolean makeButtons = true;
-
-    private ArrayList<CoinLocation> coins = new ArrayList<>();
-    private ArrayList<Point2D> buttons = new ArrayList<>();
+    private boolean makeButtons;
+    private ArrayList<CoinLocation> coins;
+    private ArrayList<Point2D> buttons;
 
     public GridPanel(int rows, int cols){
         this.rows = rows;
         this.cols = cols;
+        this.makeButtons = true;
+        this.coins = new ArrayList<>();
+        this.buttons = new ArrayList<>();
     }
 
     public void paintComponent(Graphics g){
@@ -42,7 +44,8 @@ public class GridPanel extends JPanel  {
         g2d.drawRoundRect(getWidth()/12*2, (int) (getHeight()/8*6.5), 50, getHeight()-(int) (getHeight()/8*6.5), 15, 15);
         g2d.drawRoundRect(getWidth()/12*10 -50, (int) (getHeight()/8*6.5), 50, getHeight()-(int) (getHeight()/8*6.5), 15, 15);
 
-        makeCoins();
+        if(makeButtons)
+            makeCoins();
 
         for(int i = 0; i < rows; i++){
             g2d.setColor(new Color(41, 163, 41));
@@ -58,8 +61,11 @@ public class GridPanel extends JPanel  {
         makeButtons = false;
 
         for(CoinLocation coin : coins){
+            coin.setGraphics(g2d);
             coin.draw();
         }
+
+        System.out.println("paintComponent");
     }
 
     public ArrayList<Point2D> getButtons(){

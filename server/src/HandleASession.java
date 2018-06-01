@@ -44,6 +44,14 @@ public class HandleASession implements Runnable, Connect4Constants {
 
         }
 
+        private void printBoard(){
+            String result = Arrays
+                    .stream(cell)
+                    .map(Arrays::toString)
+                    .collect(Collectors.joining(System.lineSeparator()));
+            System.out.println(result);
+        }
+
         /** Implement the run() method for the thread */
         public void run() {
             try {
@@ -74,14 +82,9 @@ public class HandleASession implements Runnable, Connect4Constants {
                 while (true) {
                     // Receive a move from player 1
                     Point2D point = (Point2D) fromPlayer1.readObject();
-                    if(cell[(int) point.getX()][(int)(point.getY())] == ' ') {
-                        cell[(int) point.getX()][(int) point.getY()] = 'R';
+                    if(cell[(int) point.getY()][(int)(point.getX())] == ' ') {
+                        cell[(int) point.getY()][(int) point.getX()] = 'R';
                         isValid = true;
-                        String result = Arrays
-                                .stream(cell)
-                                .map(Arrays::toString)
-                                .collect(Collectors.joining(System.lineSeparator()));
-                        System.out.println(result);
                         System.out.println(point);
                     }
                     else {
@@ -117,13 +120,8 @@ public class HandleASession implements Runnable, Connect4Constants {
 
                     // Receive a move from Player 2
                     point = (Point2D) fromPlayer2.readObject();
-                    if(cell[(int) point.getX()][(int)(point.getY())] == ' ') {
-                        cell[(int) point.getX()][(int) (point.getY())] = 'G';
-                        String result = Arrays
-                                .stream(cell)
-                                .map(Arrays::toString)
-                                .collect(Collectors.joining(System.lineSeparator()));
-                        System.out.println(result);
+                    if(cell[(int) point.getY()][(int)(point.getX())] == ' ') {
+                        cell[(int) point.getY()][(int) (point.getX())] = 'G';
                         isValid = true;
                     }
                     else {
@@ -148,6 +146,12 @@ public class HandleASession implements Runnable, Connect4Constants {
                             toPlayer1.writeObject(point);
                         }
                     }
+
+                    String result = Arrays
+                            .stream(cell)
+                            .map(Arrays::toString)
+                            .collect(Collectors.joining(System.lineSeparator()));
+                    System.out.println(result);
                 }
             }catch (IOException ioEx){
 //                ioEx.printStackTrace();
@@ -167,8 +171,8 @@ public class HandleASession implements Runnable, Connect4Constants {
 
         /** Determine if the cells are all occupied */
         private boolean isFull() {
-            for (int i = 0; i < 7; i++)
-                for (int j = 0; j < 6; j++)
+            for (int i = 0; i < 6; i++)
+                for (int j = 0; j < 7; j++)
                     if (cell[i][j] == ' ') {
                         return false; // At least one cell is not filled
                     }

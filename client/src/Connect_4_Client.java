@@ -59,6 +59,7 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
         this.setContentPane(content);
+        this.setMinimumSize(new Dimension(500,500));
         this.setVisible(true);
 
         //
@@ -69,11 +70,7 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
             for (int j = 0; j < 7; j++)
                 cells[i][j] = space;
 
-        String result = Arrays
-                .stream(cells)
-                .map(Arrays::toString)
-                .collect(Collectors.joining(System.lineSeparator()));
-        System.out.println(result);
+        printBoard();
 
         clicked = false;
         connectedTries = 0;
@@ -99,6 +96,14 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
                 return false;
         }
         return true;
+    }
+
+    private void printBoard(){
+        String result = Arrays
+                .stream(cells)
+                .map(Arrays::toString)
+                .collect(Collectors.joining(System.lineSeparator()));
+        System.out.println(result);
     }
 
     private void connectToServer() {
@@ -139,10 +144,12 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
                     //fromServer.readInt(); // Whatever read is ignored
                     // The other player has joined
                     // It is my turn
+                    setTitle("Player 1 (" + myToken + ")");
                     myTurn = true;
                 } else if (player == PLAYER2) {
                     myToken = 'G';
                     otherToken = 'R';
+                    setTitle("Player 2 (" + myToken + ")");
                     myTurn = false;
                 }
 
@@ -170,9 +177,13 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
     }
 
     private void waitForPlayerAction() throws InterruptedException {
+        System.out.println("waitForPlayerAction: waiting");
+
         while (waiting) {
             Thread.sleep(100);
         }
+
+        System.out.println("waitForPlayerAction: done");
 
         waiting = true;
     }
@@ -185,6 +196,7 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
 
         toServer.writeObject(new Point2D.Double(x,y));
         System.out.println("move send to server");
+        printBoard();
     }
 
     private void receiveInfoFromServer() throws IOException, ClassNotFoundException {
@@ -241,11 +253,13 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
 
         for(CoinLocation coin : panel.getCoins()){
             if(coin.getRow() == row && coin.getColumn() == column){
-                if(myToken == 'G')
+                if(myToken == 'R') {
                     coin.setColor(Color.green);
-                else
+                } else {
                     coin.setColor(Color.red);
+                }
 
+                cells[column][row] = otherToken;
                 coin.draw();
                 return;
             }
@@ -271,20 +285,23 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
                 Point2D buttonPoint = buttons.get(buttonIndex);
 
                 if (mousePoint.getX() > buttonPoint.getX() && mousePoint.getX() < buttonPoint.getX() + 70 && mousePoint.getY() > buttonPoint.getY() && mousePoint.getY() < buttonPoint.getY() + 90) {
-                    System.out.println("buttonIndex: " + buttonIndex);
+                        System.out.println("buttonIndex: " + buttonIndex);
 
-                    columnSelected = buttonIndex;
-                    for (int i = 5; i > 0; i--) {
-                        System.out.println("i: " + i);
-                        System.out.println("columnSelected: " + columnSelected);
-                        if (cells[i][columnSelected] == ' ') {
-                            rowSelected = i;
-                            cells[i][columnSelected] = 'R';
-                            System.out.println("row: " + rowSelected + "/ column:  " + columnSelected);
-                            waiting = false;
-                            break;
-                        }
-                    }
+                        buttonPreassed(buttonIndex);
+
+                        //rowSelected = buttonIndex;
+//                        for (int i = 5; i > 0; i--) {
+//                            System.out.println("i: " + i);
+//                            System.out.println("columnSelected: " + rowSelected);
+//                            if (cells[i][columnSelected] == ' ') {
+//                                rowSelected = i;
+//                                cells[i][columnSelected] = myToken;
+//                                System.out.println("row: " + rowSelected + "/ column:  " + columnSelected);
+//                                buttonPreassed(buttonIndex);
+//                                waiting = false;
+//                                break;
+//                            }
+//                        }
                 }
             }
         }
@@ -301,7 +318,7 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
     }
 
     private void buttonPreassed(int button){
-        rowSelected = button-1;
+        rowSelected = button;
 
         ArrayList<CoinLocation> selectedRow = new ArrayList<>();
 
@@ -311,21 +328,25 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
             }
         }
 
-        for(int i = selectedRow.size()-1; i > -1; i--){
+        for(int i = selectedRow.size() - 1; i > -1; i--){
             CoinLocation coin = selectedRow.get(i);
             if(!coin.isDrawnWithColor()){
                 System.out.println("setDrawnWithColor(true)");
                 columnSelected = i;
                 coin.setDrawnWithColor(true);
+
+                System.out.println("columnSelected: " + columnSelected);
+                System.out.println("rowSelected: " + rowSelected);
+
+                cells[columnSelected][rowSelected] = myToken;
+                coin.draw();
+
+                waiting = false;
                 break;
             }
         }
 
-        try {
-            sendMove();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
     }
 }
 

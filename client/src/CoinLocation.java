@@ -66,4 +66,8 @@ public class CoinLocation {
     public void setDrawnWithColor(boolean drawnWithColor) {
         isDrawnWithColor = drawnWithColor;
     }
+
+    public void setGraphics(Graphics2D g) {
+        this.g = g;
+    }
 }
