@@ -118,7 +118,6 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
             // Create an output stream to send data to the server
             fromServer = new ObjectInputStream(socket.getInputStream());
 
-            System.out.println("Code can be reached");
 
         }catch(Exception e){
             e.printStackTrace();
@@ -150,7 +149,6 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
                 // Continue to play
                 while (continueToPlay) {
                     if (player == PLAYER1) {
-                        System.out.println("player 1");
                         waitForPlayerAction(); // Wait for player 1 to move
                         sendMove(); // Send the move to the server
                         receiveInfoFromServer(); // Receive info from the server
@@ -264,16 +262,12 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        int buttonIndicator = 1;
+        int buttonIndicator = 0;
         Point2D mousePoint = new Point2D.Double(e.getX(),e.getY());
         for(Point2D buttonPoint: panel.getButtons()) {
             if (mousePoint.getX() > buttonPoint.getX() && mousePoint.getX() < buttonPoint.getX() + 70 && mousePoint.getY() > buttonPoint.getY() && mousePoint.getY() < buttonPoint.getY() + 90) {
-//                System.out.println(buttonIndicator);
-//                System.out.println("buttonpoint " + buttonPoint);
-                //System.out.println(myTurn);
                 if (myTurn) {
-                    //System.out.println("reachable");
-                    columnSelected = buttonIndicator - 1;
+                    columnSelected = buttonIndicator;
                     for (int i = 5; i > 0; i--) {
                         if (cells[i][columnSelected] == ' ') {
                             rowSelected = i;
@@ -284,15 +278,10 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
                         }
 
                     }
-                    //myTurn = false;
-                   // System.out.println("mouse point: " + mousePoint);
                 }
             }
                 buttonIndicator++;
-                //System.out.println(buttonPoint);
         }
-            //System.out.println("mouse point: " + mousePoint);
-            //System.out.println(point2D);
     }
 
     @Override

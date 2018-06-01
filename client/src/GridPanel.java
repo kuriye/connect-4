@@ -8,6 +8,7 @@ public class GridPanel extends JPanel  {
     private int rows;
     private int cols;
     private Graphics2D g;
+    private boolean makeButtons = true;
 
     private ArrayList<CoinLocation> coins = new ArrayList<>();
     private ArrayList<Point2D> buttons = new ArrayList<>();
@@ -51,8 +52,10 @@ public class GridPanel extends JPanel  {
             g2d.setColor(Color.BLACK);
             g2d.drawOval(getWidth()/12*2 + 135 + 160*i, getHeight()/14 - 68,50 ,50);
             g2d.drawOval(getWidth()/12*2 + 130 + 160*i, getHeight()/14 - 70,60 ,60);
-            buttons.add(new Point2D.Double(getWidth()/12*2 + 135 + 160*i,getHeight()/14 - 68));
+            if(makeButtons)
+                 buttons.add(new Point2D.Double(getWidth()/12*2 + 135 + 160*i,getHeight()/14 - 68));
         }
+        makeButtons = false;
 
         for(CoinLocation coin: coins){
             coin.draw();

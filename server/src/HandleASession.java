@@ -79,6 +79,11 @@ public class HandleASession implements Runnable, Connect4Constants {
                     if(cell[(int) point.getX()][(int)(point.getY())] == ' ') {
                         cell[(int) point.getX()][(int) point.getY()] = 'R';
                         isValid = true;
+                        String result = Arrays
+                                .stream(cell)
+                                .map(Arrays::toString)
+                                .collect(Collectors.joining(System.lineSeparator()));
+                        System.out.println(result);
                         System.out.println(point);
                     }
                     else {
@@ -160,7 +165,6 @@ public class HandleASession implements Runnable, Connect4Constants {
             for (int i = 0; i < 7; i++)
                 for (int j = 0; j < 6; j++)
                     if (cell[i][j] == ' ') {
-                        System.out.println("vol");
                         return false; // At least one cell is not filled
                     }
             // All cells are filled
