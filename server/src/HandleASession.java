@@ -1,12 +1,8 @@
-import javafx.application.Platform;
-
 import java.awt.geom.Point2D;
 import java.io.*;
 import java.net.Socket;
 import java.util.Arrays;
 import java.util.stream.Collectors;
-
-
 
 public class HandleASession implements Runnable, Connect4Constants {
         private Socket player1;
@@ -33,13 +29,7 @@ public class HandleASession implements Runnable, Connect4Constants {
                 for (int j = 0; j < 7; j++)
                     cell[i][j] = ' ';
 
-            //sout
-            String result = Arrays
-                    .stream(cell)
-                    .map(Arrays::toString)
-                    .collect(Collectors.joining(System.lineSeparator()));
-            System.out.println(result);
-
+            printBoard();
 //            System.out.println(isRowFull(0)); wordt ook gecontroleerd in client -> als hij vol zit dan wordt hij niet gestuurd naar de server
 
         }
@@ -82,7 +72,6 @@ public class HandleASession implements Runnable, Connect4Constants {
                 while (true) {
                     // Receive a move from player 1
                     Point2D point = (Point2D) fromPlayer1.readObject();
-
                     System.out.println("Reading point object from player 1");
 
                     if(cell[(int) point.getY()][(int)(point.getX())] == ' ') {
@@ -122,6 +111,7 @@ public class HandleASession implements Runnable, Connect4Constants {
 
                     // Receive a move from Player 2
                     point = (Point2D) fromPlayer2.readObject();
+                    System.out.println("Reading point object from player 1");
                     if(cell[(int) point.getY()][(int)(point.getX())] == ' ') {
                         cell[(int) point.getY()][(int) (point.getX())] = 'G';
                         isValid = true;

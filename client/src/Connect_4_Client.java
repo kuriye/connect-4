@@ -119,7 +119,7 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
         new Thread(() -> {
             try {
                 System.out.println("In Thread in connectToServer()");
-                
+
                 // Get notification from the server
                 int player = fromServer.readInt();
                 System.out.println("Player: " + player);
@@ -232,6 +232,7 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
                 else
                     coin.setColor(Color.green);
 
+                coin.setDrawnWithColor(true);
                 coin.draw();
                 repaint();
 
@@ -296,6 +297,8 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
             CoinLocation coin = selectedRow.get(i);
             if(!coin.isDrawnWithColor()){
                 columnSelected = i;
+
+                coin.draw();
                 coin.setDrawnWithColor(true);
 
                 cells[columnSelected][rowSelected] = myToken;
