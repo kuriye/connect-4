@@ -1,8 +1,9 @@
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
+import java.util.Comparator;
 
-public class CoinLocation {
+public class CoinLocation implements Comparable<CoinLocation>, Comparator<CoinLocation>{
     private Ellipse2D.Double circle;
     private Color color;
     private int row;
@@ -69,5 +70,39 @@ public class CoinLocation {
 
     public void setGraphics(Graphics2D g) {
         this.g = g;
+    }
+
+    public static Comparator<CoinLocation> compareColumn(){
+        return Comparator.comparingInt(CoinLocation::getColumn);
+    }
+
+    @Override
+    public int compare(CoinLocation coin1, CoinLocation coin2) {
+        return coin1.compareTo(coin2);
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        boolean same = false;
+        if(other instanceof CoinLocation){
+            CoinLocation otherCoin = (CoinLocation) other;
+            same = row == otherCoin.getRow() && column == otherCoin.getColumn();
+        }
+        return same;
+    }
+
+    @Override
+    public int compareTo(CoinLocation coin) {
+        if(column > coin.getColumn()){
+            return 1;
+        }else if(column < coin.getColumn()){
+            return -1;
+        }else if(row > coin.getRow()){
+            return 1;
+        }else if(row < coin.getRow()){
+            return -1;
+        }else{
+            return 0;
+        }
     }
 }
