@@ -77,6 +77,11 @@ public class CoinLocation implements Comparable<CoinLocation>, Comparator<CoinLo
     }
 
     @Override
+    public String toString(){
+        return "(Column: " + column + " - Row: " + row + ")";
+    }
+
+    @Override
     public int compare(CoinLocation coin1, CoinLocation coin2) {
         return coin1.compareTo(coin2);
     }
