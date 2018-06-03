@@ -28,6 +28,7 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
     private int connectedTries;
     private GridPanel panel;
     private boolean clicked;
+    private boolean hasWon = false;
 
     public static void main(String[] args){
         new Connect_4_Client();
@@ -78,6 +79,8 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
             connectedTries++;
 
             System.out.println("Not connected, trying to reconnect... (try: " + connectedTries + ")");
+            this.panel.setText("Not connected, trying to reconnect... (try: " + connectedTries + ")");
+            repaint();
 
             if(connectedTries < MAX_CONNECT_TRIES)
                 return createSocket();
@@ -98,10 +101,13 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
     private void connectToServer() {
         if(!createSocket()){
             System.out.println("Couldn't connect to server.");
+            this.panel.setText("Couldn't connect to server.");
 //            System.exit(0);
             return;
         } else {
             System.out.println("Connected to server.");
+            this.panel.setText("Connected to server.");
+            repaint();
         }
 
         try {
@@ -119,10 +125,12 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
         // Control the game on a separate thread
         new Thread(() -> {
             try {
+                repaint();
                 System.out.println("In Thread in connectToServer()");
 
                 // Get notification from the server
                 int player = fromServer.readInt();
+                this.panel.setText("You are player: " + player);
                 System.out.println("Player: " + player);
 
                 // Am I player 1 or 2?
@@ -130,28 +138,30 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
                     myToken = 'R';
                     otherToken = 'G';
                     setTitle("Player 1 (" + myToken + ")");
+                    this.panel.setText("Your turn");
                     myTurn = true;
                 } else if (player == PLAYER2) {
                     myToken = 'G';
                     otherToken = 'R';
                     setTitle("Player 2 (" + myToken + ")");
+                    this.panel.setText("Waiting for player 1 to move");
                     myTurn = false;
                 }
 
                 // Continue to play
                 while (continueToPlay) {
                     if (player == PLAYER1) {
-                        waitForPlayerAction(); // Wait for player 1 to move
-                        sendMove(); // Send the move to the server
-                        receiveInfoFromServer(); // Receive info from the server
+                        waitForPlayerAction();
+                        sendMove();
+                        repaint();
+                        receiveInfoFromServer(); //
                     } else if (player == PLAYER2) {
-                        receiveInfoFromServer(); // Receive info from the server
-                        waitForPlayerAction(); // Wait for player 2 to move
-                        sendMove(); // Send player 2's move to the server
+                        receiveInfoFromServer();
+                        waitForPlayerAction();
+                        sendMove();
+                        repaint();
                     }
-                    repaint();
                 }
-                repaint();
 
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -191,33 +201,37 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
             // Player 1 won, stop playing
             continueToPlay = false;
             if (myToken == 'R') {
-                //TODO: notify player 1 won
+                this.panel.setText("YOU WON!!!");
+                hasWon = true;
             } else if (myToken == 'G') {
-                //TODO: notify player 2 won
+                this.panel.setText("you lost :(");
                 receiveMove();
             }
         } else if (status == PLAYER2_WON) {
             // Player 2 won, stop playing
             continueToPlay = false;
             if (myToken == 'G') {
-                //TODO: notify player 2 won
+                this.panel.setText("YOU WON!!!");
+                hasWon = true;
             } else if (myToken == 'R') {
-                //TODO: notify player 1 won
+                this.panel.setText("you lost :(");
                 receiveMove();
             }
         } else if (status == DRAW) {
             // No winner, game is over
+            this.panel.setText("Draw!");
+            repaint();
             continueToPlay = false;
 
             if (myToken == 'G') {
                 receiveMove();
             }
-
-            //TODO: notify players draw
         } else {
             receiveMove();
+            this.panel.setText("Your turn");
             myTurn = true;
         }
+        repaint();
     }
 
     private void receiveMove() throws IOException, ClassNotFoundException {
@@ -266,6 +280,7 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
                         mousePoint.getY() > buttonPoint.getY() &&
                         mousePoint.getY() < buttonPoint.getY() + 90){
                     buttonPreassed(buttonIndex);
+                    this.panel.setText("Wait for opponent");
                 }
             }
         }
