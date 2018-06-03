@@ -7,6 +7,7 @@ import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 public class Connect_4_Client extends JFrame implements Connect4Constants, MouseListener {
@@ -292,6 +293,9 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
                 selectedRow.add(coin);
             }
         }
+
+        //sorteren selectedRow list
+        Collections.sort(selectedRow);
 
         for(int i = selectedRow.size() - 1; i > -1; i--){
             CoinLocation coin = selectedRow.get(i);
