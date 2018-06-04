@@ -280,7 +280,8 @@ public class Connect_4_Client extends JFrame implements Connect4Constants, Mouse
                         mousePoint.getY() > buttonPoint.getY() &&
                         mousePoint.getY() < buttonPoint.getY() + 90){
                     buttonPreassed(buttonIndex);
-                    this.panel.setText("Wait for opponent");
+                    if(!hasWon)
+                        this.panel.setText("Wait for opponent");
                 }
             }
         }

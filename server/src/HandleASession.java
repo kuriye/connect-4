@@ -88,6 +88,7 @@ public class HandleASession implements Runnable, Connect4Constants {
                         System.out.println("PLAYER 1 WINS");
                         toPlayer1.writeInt(PLAYER1_WON);
                         toPlayer2.writeInt(PLAYER1_WON);
+                        toPlayer1.writeObject(point);
                         toPlayer2.writeObject(point);
                         break; // Break the loop
                     }
@@ -128,6 +129,7 @@ public class HandleASession implements Runnable, Connect4Constants {
                         toPlayer1.writeInt(PLAYER2_WON);
                         toPlayer2.writeInt(PLAYER2_WON);
                         toPlayer1.writeObject(point);
+                        toPlayer2.writeObject(point);
                         break;
                     }
                     else if(isValid){
